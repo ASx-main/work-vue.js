@@ -22,3 +22,13 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+
+# Api
+
+### Регистрация:
+
+Method - post  
+URL - /registration  
+Parameters - email, password
