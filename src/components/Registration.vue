@@ -1,36 +1,51 @@
 <template>
   <div>
     <form class="registration"
-          @submit.prevent>
-      <legend class="caption">
-        Авторизация
-      </legend>
-      <label class="label-form"
-             for="e-mail">Введите email
-      </label>
-      <input v-model="user.email"
-             class="input" id="e-mail"
-             type="text">
-      <label class="label-form"
-             for="password">Введите пароль
-      </label>
-      <input v-model="user.password"
-             class="input" id="password"
-             type="password">
-      <label class="label-form"
-             for="confirmPassword">Подтвердить пароль
-      </label>
-      <input class="input"
-             v-model="confirmPassword"
-             type="password">
-      <span class="non-password"
-            v-if="this.user.password !== this.confirmPassword"> Пароли не совпадают!
-      </span>
-      <button @click="getUser"
-              class="btn">
-        Войти
-      </button>
-
+          @submit.prevent
+    >
+      <fieldset class="fieldset-form">
+        <legend class="caption">
+          Авторизация
+        </legend>
+        <label class="label-form"
+               for="email"
+        >
+          Введите email
+        </label>
+        <input v-model="user.email"
+              class="input" id="email"
+              type="text"
+        >
+        <label class="label-form"
+              for="password"
+        >
+          Введите пароль
+        </label>
+        <input v-model="user.password"
+              class="input" id="password"
+              type="password"
+        >
+        <label class="label-form"
+              for="confirmPassword"
+        >
+          Подтвердить пароль
+        </label>
+        <input class="input"
+              id="confirmPassword"
+              v-model="confirmPassword"
+              type="password"
+        >
+      </fieldset>
+        <span class="non-password"
+              v-if="this.user.password !== this.confirmPassword"
+        >
+           Пароли не совпадают!
+        </span>
+        <button @click="getUser"
+                class="btn"
+        >
+          Войти
+        </button>
     </form>
   </div>
 </template>
@@ -52,12 +67,10 @@ export default {
     async getUser() {
       if (this.user.password === this.confirmPassword) {
         try {
-          const res = await axios.post('/registration', {
+          await axios.post('/registration', {
             email: this.user.email,
             password: this.user.password,
           });
-
-          console.log(res);
         } catch (e) {
           console.log(e);
         }
@@ -79,8 +92,17 @@ export default {
   width: 50%;
 }
 
+.fieldset-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  text-align: center;
+}
+
 .caption {
-  margin: 15px 0;
+  padding: 15px 0;
   font-size: 32px;
   font-weight: 700;
   border-radius: 10px;
@@ -94,7 +116,7 @@ export default {
 }
 
 .input {
-  width: 35%;
+  width: 100%;
   height: 25px;
   background-color: #decece;
   outline: none;
