@@ -1,7 +1,16 @@
 <template>
-  <div id="app">Hello world!</div>
+  <div id="app">
+    <Registration/>
+  </div>
 </template>
 
 <script>
-export default {};
+
+import Registration from './components/Registration.vue';
+
+export default {
+  components: {
+    Registration,
+  },
+};
 </script>
