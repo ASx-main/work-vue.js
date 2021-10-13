@@ -13,27 +13,45 @@
           Введите email
         </label>
         <input v-model="user.email"
-              class="input" id="email"
-              type="text"
+               class="input" id="email"
+               type="text"
+               :class="{ error_validate: errorValidationEmail }"
+               placeholder="Введите почту"
         >
+        <div v-if="this.errorValidationEmail === true"
+             class="message-error"
+        >
+          Пожалуйста, введите корректный адрес почты! <br>
+          Пример: ivanovIvan123@mail.ru
+        </div>
         <label class="label-form"
-              for="password"
+               for="password"
         >
           Введите пароль
         </label>
         <input v-model="user.password"
-              class="input" id="password"
-              type="password"
+               class="input"
+               id="password"
+               type="password"
+               :class="{ error_validate: errorValidationPassword }"
+               placeholder="Введите пароль"
         >
+        <div v-if="this.errorValidationPassword === true"
+        class="message-error">
+          Пароль не должен начинаться с цифры и содержать спец.символов, <br>
+          может состоять из букв и цифр
+        </div>
+
         <label class="label-form"
-              for="confirmPassword"
+               for="confirmPassword"
         >
           Подтвердить пароль
         </label>
         <input class="input"
-              id="confirmPassword"
-              v-model="confirmPassword"
-              type="password"
+               id="confirmPassword"
+               v-model="confirmPassword"
+               type="password"
+               placeholder="Подтвердите пароль"
         >
       </fieldset>
         <span class="non-password"
@@ -61,26 +79,54 @@ export default {
         password: '',
       },
       confirmPassword: '',
+      errorValidationEmail: false,
+      errorValidationPassword: false,
     };
   },
   methods: {
     async getUser() {
-      if (this.user.password === this.confirmPassword) {
+      if (this.user.password === this.confirmPassword
+      && this.validateEmail(this.user.email)
+      && this.validationPassword(this.user.password)) {
         try {
           await axios.post('/registration', {
             email: this.user.email,
             password: this.user.password,
           });
+
+          this.errorValidationEmail = false;
         } catch (e) {
           console.log(e);
         }
       }
     },
+    validateEmail(email) {
+      const re = /\S+@\S+\.\S+/;
+      if (re.test(email) === false) {
+        this.errorValidationEmail = true;
+      }
+      return re.test(email);
+    },
+    validationPassword(password) {
+      const startWithoutNumber = /^\D.*$/;
+      const withoutSpecialChars = /^[^-() /]*$/;
+      const containsLetters = /^.*[a-zA-Z]+.*$/;
+
+      if (startWithoutNumber.test(password)
+          && withoutSpecialChars.test(password)
+          && containsLetters.test(password)) {
+        this.errorValidationPassword = false;
+        return true;
+      }
+      this.errorValidationPassword = true;
+
+      return false;
+    },
   },
 };
 </script>
 
-<style scope>
+<style scoped>
 .registration {
   display: flex;
   align-items: center;
@@ -139,5 +185,20 @@ export default {
   font-size: 18px;
   font-weight: 700;
   margin: 15px;
+  color: #C22929;
+
+}
+
+.error_validate {
+  border: solid 1px #C22929;
+}
+
+.message-error {
+  background-color: #ffffff;
+  color: #C22929;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-top: 5px;
+  border: solid 1px #C22929;
 }
 </style>
