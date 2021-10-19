@@ -13,12 +13,13 @@
           Введите email
         </label>
         <input v-model="user.email"
-               class="input" id="email"
+               class="input"
+               id="email"
                type="text"
-               :class="{ error_validate: errorValidationEmail }"
-               placeholder="Введите почту"
+               :class="{ 'error-validate': errorValidationEmail }"
+               :placeholder="placeholderEmail"
         >
-        <div v-if="this.errorValidationEmail === true"
+        <div v-if="errorValidationEmail"
              class="message-error"
         >
           Пожалуйста, введите корректный адрес почты! <br>
@@ -33,10 +34,10 @@
                class="input"
                id="password"
                type="password"
-               :class="{ error_validate: errorValidationPassword }"
-               placeholder="Введите пароль"
+               :class="{ 'error-validate': errorValidationPassword }"
+               :placeholder="placeholderPassword"
         >
-        <div v-if="this.errorValidationPassword === true"
+        <div v-if="errorValidationPassword"
         class="message-error">
           Пароль не должен начинаться с цифры и содержать спец.символов, <br>
           может состоять из букв и цифр
@@ -51,11 +52,11 @@
                id="confirmPassword"
                v-model="confirmPassword"
                type="password"
-               placeholder="Подтвердите пароль"
+               :placeholder="placeholderConfirmPassword"
         >
       </fieldset>
         <span class="non-password"
-              v-if="this.user.password !== this.confirmPassword"
+              v-if="user.password !== confirmPassword"
         >
            Пароли не совпадают!
         </span>
@@ -81,6 +82,10 @@ export default {
       confirmPassword: '',
       errorValidationEmail: false,
       errorValidationPassword: false,
+      placeholderEmail: 'Введите почту',
+      placeholderPassword: 'Введите пароль',
+      placeholderConfirmPassword: 'Повторите пароль',
+
     };
   },
   methods: {
@@ -101,11 +106,11 @@ export default {
       }
     },
     validateEmail(email) {
-      const re = /\S+@\S+\.\S+/;
-      if (re.test(email) === false) {
+      const reEmailValidate = /\S+@\S+\.\S+/;
+      if (!reEmailValidate.test(email)) {
         this.errorValidationEmail = true;
       }
-      return re.test(email);
+      return reEmailValidate.test(email);
     },
     validationPassword(password) {
       const startWithoutNumber = /^\D.*$/;
@@ -189,7 +194,7 @@ export default {
 
 }
 
-.error_validate {
+.error-validate {
   border: solid 1px #C22929;
 }
 
